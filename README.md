@@ -24,4 +24,5 @@
         + Currently, there is no complete control over members registering for silver packages, so it is possible to create an additional table for managing members registering for other packages in the future. Add management of expired membership packages and payment methods.
 
     * Local setup guide:
-        make up (to set up docker and test)
+        + make up (to set up and docker and test)
+        + make run (to run local)

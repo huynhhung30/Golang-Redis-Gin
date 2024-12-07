@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  trinity_app:
+    container_name: trinity_app
+    build:
+      context: .
+      # Correct the path to your Dockerfile
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 5001:5001
+    # Important to bind/mount your codebase dir to /app dir for live reload
+
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - '3307:3306'
+    environment:
+      - MYSQL_DATABASE=trinity
+      - MYSQL_ROOT_PASSWORD=123
+    volumes:
+      - db:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  # redis:
+  #   container_name: 'redis-trinity'
+  #   image: redis:alpine
+  #   ports:
+  #     - '6379:6379'
+  #   volumes:
+  #     - ./Trinity-App:/app
+  #     - type: bind
+  #       source: ./myredis/redis.conf
+  #       target: /usr/local/etc/redis/redis.conf
+
+volumes:
+  db:
+    driver: local

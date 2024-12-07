@@ -1,0 +1,268 @@
+basePath: /api/v1/trinity
+definitions:
+  models.CouponModel:
+    properties:
+      count_registrations:
+        type: integer
+      created_at:
+        type: string
+      discount:
+        type: string
+      due_date:
+        type: string
+      id:
+        type: integer
+      is_valid:
+        type: boolean
+      tittle:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.QueryCoupon:
+    properties:
+      id:
+        type: integer
+    type: object
+  models.UserModel:
+    properties:
+      address:
+        type: string
+      avatar:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      email_verified:
+        type: boolean
+      first_name:
+        type: string
+      id:
+        type: integer
+      is_silver:
+        type: boolean
+      last_name:
+        type: string
+      login_method:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+      social_id:
+        type: string
+      status:
+        type: string
+      updated_at:
+        type: string
+      user_type:
+        type: string
+    type: object
+  models.UsersLoginRequestModel:
+    properties:
+      email:
+        type: string
+      login_method:
+        type: string
+      password:
+        type: string
+      social_id:
+        type: string
+      user_type:
+        type: string
+    type: object
+host: localhost:5001
+info:
+  contact: {}
+  description: A tag service api
+  title: Trinity App Tag Service API
+  version: "1.0"
+paths:
+  /coupon-list:
+    get:
+      consumes:
+      - application/json
+      description: Get Coupon List
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: from_date
+        type: string
+      - in: query
+        name: keyword
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: sort
+        type: string
+      - in: query
+        name: status
+        type: string
+      - in: query
+        name: to_date
+        type: string
+      - in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: list coupon
+          schema:
+            items:
+              type: array
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      tags:
+      - Coupon
+  /create-coupon:
+    post:
+      consumes:
+      - application/json
+      description: Create a new coupon
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Require Email and Password
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.CouponModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "406":
+          description: Not Acceptable
+      summary: Create a coupon
+      tags:
+      - Coupon
+  /member-login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user using email and password, returns a JWT token
+        if successful
+      parameters:
+      - description: User login object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UsersLoginRequestModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT Token
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Authenticate a user
+      tags:
+      - user
+  /member-register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with the given input data
+      parameters:
+      - description: Require Email and Password
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "406":
+          description: Not Acceptable
+      summary: Create a user
+      tags:
+      - user
+  /silver-register:
+    post:
+      consumes:
+      - application/json
+      description: Require input Id of coupon
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: POST
+        in: body
+        name: id_coupon
+        required: true
+        schema:
+          $ref: '#/definitions/models.QueryCoupon'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT Token
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Silver Register
+      tags:
+      - user
+swagger: "2.0"

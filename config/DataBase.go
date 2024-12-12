@@ -1,7 +1,7 @@
 package config
 
 import (
-	"trinity-app/utils/functions"
+	"Golang-Redis-Gin/utils/functions"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

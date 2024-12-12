@@ -3,7 +3,7 @@ package utils
 import (
 	"net/smtp"
 	"os"
-	"trinity-app/utils/functions"
+	"Golang-Redis-Gin/utils/functions"
 )
 
 func SendMail(email string, subject string, body string) {

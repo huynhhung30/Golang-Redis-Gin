@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
-	"trinity-app/config"
-	"trinity-app/utils/functions"
+	"Golang-Redis-Gin/config"
+	"Golang-Redis-Gin/utils/functions"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"

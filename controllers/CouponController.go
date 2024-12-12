@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"net/http"
-	"trinity-app/models"
-	"trinity-app/utils"
-	"trinity-app/utils/constants"
-	"trinity-app/utils/functions"
+	"Golang-Redis-Gin/models"
+	"Golang-Redis-Gin/utils"
+	"Golang-Redis-Gin/utils/constants"
+	"Golang-Redis-Gin/utils/functions"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"

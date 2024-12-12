@@ -2,7 +2,7 @@ package errors
 
 import (
 	"net/http"
-	models "trinity-app/models/errors"
+	models "Golang-Redis-Gin/models/errors"
 
 	"github.com/gin-gonic/gin"
 )

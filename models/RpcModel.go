@@ -4,7 +4,7 @@ import (
 	"net"
 	"net/rpc"
 	"os"
-	"trinity-app/utils/functions"
+	"Golang-Redis-Gin/utils/functions"
 )
 
 type Listener int

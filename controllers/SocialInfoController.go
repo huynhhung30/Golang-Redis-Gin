@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"net/http"
-	"trinity-app/models"
-	"trinity-app/utils/constants"
+	"Golang-Redis-Gin/models"
+	"Golang-Redis-Gin/utils/constants"
 
 	"github.com/gin-gonic/gin"
 )

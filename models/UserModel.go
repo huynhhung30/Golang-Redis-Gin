@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"trinity-app/config"
-	"trinity-app/utils"
-	"trinity-app/utils/constants"
-	"trinity-app/utils/functions"
+	"Golang-Redis-Gin/config"
+	"Golang-Redis-Gin/utils"
+	"Golang-Redis-Gin/utils/constants"
+	"Golang-Redis-Gin/utils/functions"
 )
 
 type UserModel struct {

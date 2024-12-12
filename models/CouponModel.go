@@ -2,9 +2,9 @@ package models
 
 import (
 	"time"
-	"trinity-app/config"
-	"trinity-app/utils/constants"
-	"trinity-app/utils/functions"
+	"Golang-Redis-Gin/config"
+	"Golang-Redis-Gin/utils/constants"
+	"Golang-Redis-Gin/utils/functions"
 )
 
 type CouponModel struct {

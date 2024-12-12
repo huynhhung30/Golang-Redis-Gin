@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"trinity-app/controllers"
+	"Golang-Redis-Gin/controllers"
 
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"

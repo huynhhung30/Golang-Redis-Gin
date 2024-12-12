@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"time"
-	"trinity-app/utils/functions"
+	"Golang-Redis-Gin/utils/functions"
 
 	"github.com/gin-gonic/gin"
 )

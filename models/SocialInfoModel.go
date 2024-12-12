@@ -2,8 +2,8 @@ package models
 
 import (
 	"time"
-	"trinity-app/config"
-	"trinity-app/utils/functions"
+	"Golang-Redis-Gin/config"
+	"Golang-Redis-Gin/utils/functions"
 )
 
 type SocialInfoModel struct {

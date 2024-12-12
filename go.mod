@@ -1,4 +1,4 @@
-module trinity-app
+module Golang-Redis-Gin
 
 go 1.22.0
 

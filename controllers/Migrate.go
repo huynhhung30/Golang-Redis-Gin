@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"trinity-app/config"
-	"trinity-app/models"
-	"trinity-app/utils/functions"
+	"Golang-Redis-Gin/config"
+	"Golang-Redis-Gin/models"
+	"Golang-Redis-Gin/utils/functions"
 )
 
 // Auto migrate

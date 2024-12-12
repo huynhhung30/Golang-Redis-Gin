@@ -1,17 +1,17 @@
 package main
 
 import (
+	_ "Golang-Redis-Gin/cmd/docs"
+	"Golang-Redis-Gin/config"
+	errorsController "Golang-Redis-Gin/controllers/errors"
+	"Golang-Redis-Gin/middlewares"
+	"Golang-Redis-Gin/models"
+	"Golang-Redis-Gin/routes"
+	"Golang-Redis-Gin/utils/functions"
 	"fmt"
 	"net/http"
 	"os"
 	"time"
-	_ "trinity-app/cmd/docs"
-	"trinity-app/config"
-	errorsController "trinity-app/controllers/errors"
-	"trinity-app/middlewares"
-	"trinity-app/models"
-	"trinity-app/routes"
-	"trinity-app/utils/functions"
 
 	limit "github.com/aviddiviner/gin-limit"
 	"github.com/gin-contrib/cors"

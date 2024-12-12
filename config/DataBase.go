@@ -1,8 +1,6 @@
 package config
 
 import (
-	"Golang-Redis-Gin/utils/functions"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -22,9 +20,6 @@ type DBConfig struct {
 
 func GormOpen() (gormDB *gorm.DB, err error) {
 	infoDatabase := getDiverConn()
-	// dsn := "root:123@tcp(127.0.0.1:3307)/trinity?charset=utf8mb4"
-
-	
 	gormDB, err = gorm.Open(mysql.Open(infoDatabase.DriverConn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
@@ -36,7 +31,5 @@ func GormOpen() (gormDB *gorm.DB, err error) {
 	err = gormDB.Use(dbresolver.Register(dbresolver.Config{
 		Replicas: []gorm.Dialector{mysql.Open(infoDatabase.DriverConn)},
 	}))
-	functions.ShowLog("err", err)
-
 	return
 }

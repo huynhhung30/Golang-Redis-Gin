@@ -8,7 +8,6 @@ import (
 	"Golang-Redis-Gin/models"
 	"Golang-Redis-Gin/routes"
 	"Golang-Redis-Gin/utils/functions"
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -51,26 +50,24 @@ func initialGinConfig(router *gin.Engine) {
 
 	if err != nil {
 		functions.ShowLog("Connect database error", err.Error())
+	}else{
+		functions.ShowLog("Connect Database Success")
 	}
 }
 
-var (
-	redis_host = "127.0.0.1"
-	redis_port = "6379"
-	redis_uri  = fmt.Sprintf("redis://%s:%s/0", redis_host, redis_port)
-)
-
 func InitRedis() {
-	opt, err := redis.ParseURL(redis_uri)
-	if err != nil {
-		panic(err)
-	}
-	rdb := redis.NewClient(opt)
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
 	pong, err := rdb.Ping().Result()
 	if err != nil {
 		functions.ShowLog("Connect redis error", err.Error())
+	}else{
+		functions.ShowLog("Connect redis Success", pong, err)
 	}
-	functions.ShowLog("Connect redis Success", pong, err)
+	
 }
 
 func startServer(router http.Handler) {

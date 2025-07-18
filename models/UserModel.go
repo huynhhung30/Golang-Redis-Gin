@@ -24,7 +24,7 @@ type UserModel struct {
 	PhoneNumber   string    `json:"phone_number" gorm:"phone_number"`
 	LoginMethod   string    `json:"login_method" gorm:"login_method"`
 	SocialId      string    `json:"social_id" gorm:"social_id"`
-	IsSilver     	bool    `json:"is_silver" gorm:"is_silver"`
+	Role    	string    `json:"role" gorm:"role"`
 	CreatedAt     time.Time `json:"created_at" gorm:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at" gorm:"updated_at"`
 }

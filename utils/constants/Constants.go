@@ -22,7 +22,7 @@ const MSG_USER_NOT_ROLE = "User not admin"
 // USER TYPE
 const USER_TYPE_ADMIN = "admin"
 const USER_TYPE_MANAGER = "manager"
-const USER_TYPE_MEMBER = "member"
+const USER_TYPE_MEMBER = "staff"
 
 // LOGIN METHOD
 const LOGIN_METHOD_SYSTEM = "system"

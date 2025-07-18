@@ -20,6 +20,6 @@ func getDiverConn() (infoDB infoDatabaseSQL) {
 	infoDB.Username = os.Getenv("DB_USER")
 	infoDB.Password = os.Getenv("DB_PASS")
 	infoDB.Port = os.Getenv("DB_PORT")
-	infoDB.DriverConn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", infoDB.Username, infoDB.Password, infoDB.Hostname, infoDB.Port, infoDB.Name)
+	infoDB.DriverConn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", infoDB.Username, infoDB.Password, infoDB.Hostname, infoDB.Port, infoDB.Name)
 	return infoDB
 }

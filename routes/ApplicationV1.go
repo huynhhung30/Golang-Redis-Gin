@@ -16,15 +16,15 @@ func ApplicationV1Router(router *gin.Engine) {
 	api := router.Group("/api/v1")
 	{	
 		
-		auth := api.Group("/trinity")
+		member := api.Group("/member")
 		{
-			///////////////// TRINITY API
-			auth.GET("/create-table", controllers.MigrateModel)
-			auth.POST("/member-register", controllers.MemberRegister)
-			auth.POST("/silver-register", controllers.SilverRegister)
-			auth.POST("/create-coupon", controllers.CreateCoupon)
-			auth.POST("/member-login", controllers.MemberLogin)
-			auth.GET("/coupon-list", controllers.GetCouponList)
+			/////////////////  API
+			member.GET("/create-table", controllers.MigrateTable)
+			member.POST("/member-register", controllers.MemberRegister)
+			// auth.POST("/silver-register", controllers.SilverRegister)
+			// auth.POST("/create-coupon", controllers.CreateCoupon)
+			// auth.POST("/member-login", controllers.MemberLogin)
+			// auth.GET("/coupon-list", controllers.GetCouponList)
 			///////////////// TRINITY API
 
 

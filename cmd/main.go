@@ -15,7 +15,6 @@ import (
 	limit "github.com/aviddiviner/gin-limit"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis"
 	"github.com/joho/godotenv"
 )
 
@@ -27,17 +26,21 @@ import (
 func main() {
 	godotenv.Load(".env")
 	router := gin.Default()
-	initialGinConfig(router)
-	InitRedis()
+	initialGinconfig(router)
+	    // Khởi tạo kết nối Redis
+		config.InitRedis()
+
+	// router.AutoMigrate()
 	router.Use(middlewares.GinBodyLogMiddleware)
 	router.Use(errorsController.Handler)
-	routes.ApplicationV1Router(router)
+	routes.ApplicationV1Router(router)	
 	// controllers.Migrate()
 	go models.StartRpcServer()
+	
 	startServer(router)
 }
 
-func initialGinConfig(router *gin.Engine) {
+func initialGinconfig(router *gin.Engine) {
 	router.Use(limit.MaxAllowed(200))
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"},
@@ -51,24 +54,11 @@ func initialGinConfig(router *gin.Engine) {
 	if err != nil {
 		functions.ShowLog("Connect database error", err.Error())
 	}else{
-		functions.ShowLog("Connect Database Success")
+		functions.ShowLog("Connect database Success")
 	}
 }
 
-func InitRedis() {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-	pong, err := rdb.Ping().Result()
-	if err != nil {
-		functions.ShowLog("Connect redis error", err.Error())
-	}else{
-		functions.ShowLog("Connect redis Success", pong, err)
-	}
-	
-}
+
 
 func startServer(router http.Handler) {
 	serverPort := os.Getenv("PORT")

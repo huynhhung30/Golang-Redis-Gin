@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"net/http"
 	"Golang-Redis-Gin/config"
 	"Golang-Redis-Gin/models"
 	"Golang-Redis-Gin/utils"
 	"Golang-Redis-Gin/utils/constants"
 	"Golang-Redis-Gin/utils/functions"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -32,7 +32,7 @@ func Healthcheck(c *gin.Context) {
 func MigrateModel(c *gin.Context) {
 	config.DB.Debug().AutoMigrate(
 		models.UserModel{},
-		models.CouponModel{},
+		// models.CouponModel{},
 		)
 	RES_SUCCESS_SIMPLE(c, "Create model sucessfully")
 }
@@ -56,7 +56,7 @@ func MemberRegister(c *gin.Context) {
 	}
 	requestBody.UserType = constants.USER_TYPE_MEMBER
 	requestBody.LoginMethod = constants.LOGIN_METHOD_SYSTEM
-	requestBody.IsSilver = false
+	// requestBody.Role = "member"
 	// Check input empty
 	if requestBody.Password == "" {
 		RES_ERROR_MSG(c, http.StatusNotAcceptable, constants.MSG_INVALID_INPUT, "password is required")
@@ -108,11 +108,7 @@ func SilverRegister(c *gin.Context) {
 		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_USER_NOT_FOUND, nil)
 		return
 	}
-	userInfo := models.FindUserProfileById(tokenInfo.UserId)
-	if userInfo.IsSilver != false{
-		RES_ERROR_MSG(c, http.StatusConflict, "You are a silver member", nil)
-		return
-	}
+	// userInfo := models.FindUserProfileById(tokenInfo.UserId)
 	requestBody := models.QueryCoupon{}
 	err := c.ShouldBindBodyWith(&requestBody, binding.JSON)
 	if err != nil {

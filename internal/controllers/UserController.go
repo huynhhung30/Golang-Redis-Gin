@@ -1,48 +1,68 @@
 package controllers
 
 import (
+	"Golang-Redis-Gin/internal/models"
+	"Golang-Redis-Gin/internal/service"
+	"Golang-Redis-Gin/internal/utils"
+	"Golang-Redis-Gin/internal/utils/constants"
+	"context"
 	"net/http"
-	"strconv"
-	"Golang-Redis-Gin/models"
-	"Golang-Redis-Gin/utils"
-	"Golang-Redis-Gin/utils/constants"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 )
 
-// Get profile user
-func GetUserProfile(c *gin.Context) {
-	tokenInfo := utils.GetTokenInfo(c)
-	if tokenInfo.UserId == 0 {
-		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_TOKEN_NOT_FOUND, nil)
-		return
-	}
-	userInfo := models.FindUserProfileById(tokenInfo.UserId)
-	RES_SUCCESS(c, userInfo)
+
+
+type UserController interface {
+    GetUserByID(ctx context.Context, id string) (*models.UserModel, error)
 }
+
+type userController struct {
+    svc service.UserService
+}
+
+func NewUserController(s service.UserService) UserController {
+    return &userController{svc: s}
+}
+
+func (c *userController) GetUserByID(ctx context.Context, id string) (*models.UserModel, error) {
+    return c.svc.GetProfile(ctx, id)
+}
+
+
+// Get profile user
+// func GetUserProfile(c *gin.Context) {
+// 	tokenInfo := utils.GetTokenInfo(c)
+// 	if tokenInfo.UserId == 0 {
+// 		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_TOKEN_NOT_FOUND, nil)
+// 		return
+// 	}
+// 	userInfo := models.FindUserProfileById(tokenInfo.UserId)
+// 	RES_SUCCESS(c, userInfo)
+// }
 
 // GetUserProfileById
 
-func GetUserProfileById(c *gin.Context) {
-	tokenInfo := utils.GetTokenInfo(c)
-	if tokenInfo.UserId == 0 {
-		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_TOKEN_NOT_FOUND, nil)
-		return
-	}
-	idParam := c.Params.ByName("id")
-	id, err := strconv.Atoi(idParam)
-	if err != nil {
-		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_INVALID_INPUT, nil)
-		return
-	}
-	userInfo := models.FindUserProfileById(id)
-	if userInfo.Id == 0 {
-		RES_SUCCESS_SIMPLE(c, nil)
-	} else {
-		RES_SUCCESS(c, userInfo)
-	}
-}
+// func GetUserProfileById(c *gin.Context) {
+// 	// tokenInfo := utils.GetTokenInfo(c)
+// 	// if tokenInfo.UserId == 0 {
+// 	// 	RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_TOKEN_NOT_FOUND, nil)
+// 	// 	return
+// 	// }
+// 	idParam :=  c.Param("id")
+// 	id, err := strconv.Atoi(idParam)
+// 	if err != nil {
+// 		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_INVALID_INPUT, nil)
+// 		return
+// 	}
+// 	userInfo := models.FindUserProfileById(id)
+// 	if userInfo.Id == 0 {
+// 		RES_SUCCESS_SIMPLE(c, nil)
+// 	} else {
+// 		RES_SUCCESS(c, userInfo)
+// 	}
+// }
 
 // Update Profile
 func UpdateProfile(c *gin.Context) {

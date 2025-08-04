@@ -1,10 +1,10 @@
 package models
 
 import (
+	"Golang-Redis-Gin/internal/utils/functions"
 	"net"
 	"net/rpc"
 	"os"
-	"Golang-Redis-Gin/utils/functions"
 )
 
 type Listener int

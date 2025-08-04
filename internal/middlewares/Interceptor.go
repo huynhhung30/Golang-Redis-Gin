@@ -1,11 +1,11 @@
 package middlewares
 
 import (
+	"Golang-Redis-Gin/internal/utils/functions"
 	"bytes"
 	"fmt"
 	"io/ioutil"
 	"time"
-	"Golang-Redis-Gin/utils/functions"
 
 	"github.com/gin-gonic/gin"
 )

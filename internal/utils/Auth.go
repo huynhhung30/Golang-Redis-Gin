@@ -1,11 +1,11 @@
 package utils
 
 import (
+	"Golang-Redis-Gin/config"
+	"Golang-Redis-Gin/internal/utils/functions"
 	"fmt"
 	"strings"
 	"time"
-	"Golang-Redis-Gin/config"
-	"Golang-Redis-Gin/utils/functions"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"

@@ -1,10 +1,10 @@
 package models
 
 import (
-	"time"
 	"Golang-Redis-Gin/config"
-	"Golang-Redis-Gin/utils/constants"
-	"Golang-Redis-Gin/utils/functions"
+	"Golang-Redis-Gin/internal/utils/constants"
+	"Golang-Redis-Gin/internal/utils/functions"
+	"time"
 )
 
 type CouponModel struct {

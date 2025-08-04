@@ -3,11 +3,13 @@ package main
 import (
 	_ "Golang-Redis-Gin/cmd/docs"
 	"Golang-Redis-Gin/config"
-	errorsController "Golang-Redis-Gin/controllers/errors"
-	"Golang-Redis-Gin/middlewares"
-	"Golang-Redis-Gin/models"
-	"Golang-Redis-Gin/routes"
-	"Golang-Redis-Gin/utils/functions"
+	errorsController "Golang-Redis-Gin/internal/controllers/errors"
+
+	"Golang-Redis-Gin/internal/middlewares"
+	"Golang-Redis-Gin/internal/models"
+	"Golang-Redis-Gin/internal/redis"
+	"Golang-Redis-Gin/internal/routes"
+	"Golang-Redis-Gin/internal/utils/functions"
 	"net/http"
 	"os"
 	"time"
@@ -24,19 +26,16 @@ import (
 // @host 	localhost:5001
 // @BasePath /api/v1/trinity
 func main() {
-	godotenv.Load(".env")
-	router := gin.Default()
+	godotenv.Load("config/.env")
+	// Khởi tạo kết nối Redis
+	cfg := config.LoadConfig()
+    rdb := redis.NewRedisClient(cfg.RedisAddress)
+    defer rdb.Close()
+	router := routes.ApplicationV1Router(rdb) 
 	initialGinconfig(router)
-	    // Khởi tạo kết nối Redis
-		config.InitRedis()
-
-	// router.AutoMigrate()
 	router.Use(middlewares.GinBodyLogMiddleware)
 	router.Use(errorsController.Handler)
-	routes.ApplicationV1Router(router)	
-	// controllers.Migrate()
 	go models.StartRpcServer()
-	
 	startServer(router)
 }
 

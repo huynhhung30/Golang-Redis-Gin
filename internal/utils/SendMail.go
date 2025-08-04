@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"Golang-Redis-Gin/internal/utils/functions"
 	"net/smtp"
 	"os"
-	"Golang-Redis-Gin/utils/functions"
 )
 
 func SendMail(email string, subject string, body string) {

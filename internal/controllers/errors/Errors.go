@@ -1,8 +1,8 @@
 package errors
 
 import (
+	models "Golang-Redis-Gin/internal/models/errors"
 	"net/http"
-	models "Golang-Redis-Gin/models/errors"
 
 	"github.com/gin-gonic/gin"
 )

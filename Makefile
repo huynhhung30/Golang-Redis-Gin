@@ -1,5 +1,7 @@
 run:
 	go run cmd/main.go
+air:
+	air run cmd/tmp/main.exe
 
 up:
 	docker-compose up -d 

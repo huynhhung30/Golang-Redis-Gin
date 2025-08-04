@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"Golang-Redis-Gin/config"
-	"Golang-Redis-Gin/models"
-	"Golang-Redis-Gin/utils"
-	"Golang-Redis-Gin/utils/constants"
-	"Golang-Redis-Gin/utils/functions"
+	"Golang-Redis-Gin/internal/models"
+	"Golang-Redis-Gin/internal/utils"
+	"Golang-Redis-Gin/internal/utils/constants"
+	"Golang-Redis-Gin/internal/utils/functions"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"

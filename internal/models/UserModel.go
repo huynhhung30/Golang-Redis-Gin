@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"Golang-Redis-Gin/config"
-	"Golang-Redis-Gin/utils"
-	"Golang-Redis-Gin/utils/constants"
-	"Golang-Redis-Gin/utils/functions"
+	"Golang-Redis-Gin/internal/utils"
+	"Golang-Redis-Gin/internal/utils/constants"
+	"Golang-Redis-Gin/internal/utils/functions"
 )
 
 type UserModel struct {
@@ -108,7 +108,7 @@ func FindUserProfileList(params PageLimitQueryModel) (user []ProfileModel, total
 }
 
 // Find User Profile By Id
-func FindUserProfileById(user_id int) (user ProfileModel) {
+func FindUserProfileById(user_id string) (user ProfileModel) {
 
 	config.DB.Debug().
 		Table("users").

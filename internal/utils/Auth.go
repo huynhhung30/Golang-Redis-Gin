@@ -1,9 +1,10 @@
 package utils
 
 import (
-	"Golang-Redis-Gin/config"
 	"Golang-Redis-Gin/internal/utils/functions"
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -59,7 +60,7 @@ func GetTokenInfo(c *gin.Context) (tokenModel TokenModel) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(config.SECRET), nil
+		return []byte(os.Getenv("SECRET")), nil
 	})
 	if err != nil {
 		tokenModel.UserId = 0
@@ -85,8 +86,17 @@ func GenerateTokenString(user_id int, user_type string) string {
 	claims := tokenModel.Claims.(jwt.MapClaims)
 	claims["user_id"] = user_id
 	claims["user_type"] = user_type
-	claims["exp"] = functions.CurrentTime().Add(time.Hour * config.EXP_HOURS).Unix()
-	token, err := tokenModel.SignedString([]byte(config.SECRET))
+	expHoursStr := os.Getenv("EXP_HOURS")
+	expHours, err := strconv.Atoi(expHoursStr)
+	if err != nil {
+    // fallback nếu parse lỗi
+    expHours = 1 // mặc định 1h
+	}
+
+	claims["exp"] = functions.CurrentTime().
+    Add(time.Duration(expHours) * time.Hour).
+    Unix()
+	token, err := tokenModel.SignedString([]byte(os.Getenv("SECRET")))
 	if err != nil {
 		functions.ShowLog("GenerateTokenStringError", err.Error())
 	}

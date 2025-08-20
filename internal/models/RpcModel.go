@@ -27,9 +27,3 @@ func StartRpcServer() {
 	go rpc.Accept(inbound)
 }
 
-func (l *Listener) RpcFindUserProfileById(userId int, reply *string) error {
-	userInfo := FindUserInfoById(userId)
-	userInfoJsonStr := functions.StructToJsonStr(userInfo)
-	*reply = userInfoJsonStr
-	return nil
-}

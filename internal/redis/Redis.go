@@ -2,39 +2,26 @@ package redis
 
 import (
 	"context"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 )
 
-type RedisClient struct {
+type RedisCache struct {
     client *redis.Client
-    ctx    context.Context
 }
 
-var (
-    RDB *redis.Client
-)
-func NewRedisClient(addr string) *RedisClient {
-    ctx := context.Background()
-    rdb := redis.NewClient(&redis.Options{
-        Addr: addr,
-        DB:   0,
-    })
-
-    return &RedisClient{
-        client: rdb,
-        ctx:    ctx,
-    }
+func NewRedisCache(client *redis.Client) *RedisCache {
+    return &RedisCache{client: client}
 }
 
-func (r *RedisClient) GetCtx() context.Context {
-    return r.ctx
+func (r *RedisCache) Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error {
+    return r.client.Set(ctx, key, value, expiration).Err()
 }
 
-func (r *RedisClient) Client() *redis.Client {
-    return r.client
+func (r *RedisCache) Get(ctx context.Context, key string) (string, error) {
+	return r.client.Get(ctx, key).Result()
 }
-
-func (r *RedisClient) Close() error {
-    return r.client.Close()
+func (r *RedisCache) Delete(ctx context.Context, key string) error {
+    return r.client.Del(ctx, key).Err()
 }

@@ -1,8 +1,6 @@
 package models
 
 import (
-	"Golang-Redis-Gin/config"
-	"Golang-Redis-Gin/internal/utils/functions"
 	"time"
 )
 
@@ -23,16 +21,16 @@ func (t *SocialInfoModel) TableName() string {
 	return "social_infos"
 }
 
-// Create SocialInfo
-func CreateSocialInfo(socialInfoBody *SocialInfoModel) (*SocialInfoModel, error) {
-	socialInfoBody.CreatedAt = functions.CurrentTime()
-	socialInfoBody.UpdatedAt = functions.CurrentTime()
-	err := config.DB.Debug().Create(&socialInfoBody).Error
-	return socialInfoBody, err
-}
+// // Create SocialInfo
+// func CreateSocialInfo(socialInfoBody *SocialInfoModel) (*SocialInfoModel, error) {
+// 	socialInfoBody.CreatedAt = functions.CurrentTime()
+// 	socialInfoBody.UpdatedAt = functions.CurrentTime()
+// 	err := config.DB.Debug().Create(&socialInfoBody).Error
+// 	return socialInfoBody, err
+// }
 
-// Find SocialInfo Detail By Type And Id
-func FindSocialInfoDetailByTypeAndId(social_type string, social_id string) (socialInfo SocialInfoModel) {
-	config.DB.Debug().Model(SocialInfoModel{}).Where("social_type = ? AND social_id = ?", social_type, social_id).Take(&socialInfo)
-	return socialInfo
-}
+// // Find SocialInfo Detail By Type And Id
+// func FindSocialInfoDetailByTypeAndId(social_type string, social_id string) (socialInfo SocialInfoModel) {
+// 	config.DB.Debug().Model(SocialInfoModel{}).Where("social_type = ? AND social_id = ?", social_type, social_id).Take(&socialInfo)
+// 	return socialInfo
+// }

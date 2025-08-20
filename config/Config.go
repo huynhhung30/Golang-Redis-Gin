@@ -1,25 +1,75 @@
 package config
 
-import "os"
+import (
+	"log"
+	"os"
 
-const SECRET = "LIFE_ON_BE"
-const SECRET_ADMIN = "SECRET_ADMIN"
-const EXP_HOURS = 1000
-const EXP_HOURS_ADMIN = 1000
+	"github.com/joho/godotenv"
+)
 
-type Config struct {
-    RedisAddress string
+type DatabaseConfig struct {
+	Driver   string
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Name     string
 }
 
-func LoadConfig() *Config {
-    return &Config{
-        RedisAddress: getEnv("REDIS_ADDR", "localhost:6379"),
-    }
+type RedisConfig struct {
+	Addr string
 }
 
-func getEnv(key, fallback string) string {
-    if value, ok := os.LookupEnv(key); ok {
-        return value
-    }
-    return fallback
+type AppConfig struct {
+	DB    DatabaseConfig
+	Redis RedisConfig
+	Port  string
 }
+
+func LoadConfig() *AppConfig {
+		// Load env file
+		err := godotenv.Load("config/.env")
+		if err != nil {
+			log.Fatal("❌ Error loading .env file")
+		}
+	return &AppConfig{
+		DB: DatabaseConfig{
+			Driver:   "mysql",
+			Host:     os.Getenv("DB_HOST"),
+			Port:     os.Getenv("DB_PORT"),
+			User:     os.Getenv("DB_USER"),
+			Password: os.Getenv("DB_PASSWORD"),
+			Name:     os.Getenv("DB_NAME"),
+		},
+		Redis: RedisConfig{
+			Addr: os.Getenv("REDIS_ADDR"),
+		},
+		Port: os.Getenv("PORT"),
+	}
+}
+
+
+
+
+// package config
+
+// import "os"
+
+
+
+// type Config struct {
+//     RedisAddress string
+// }
+
+// func LoadConfig() *Config {
+//     return &Config{
+//         RedisAddress: getEnv("REDIS_ADDR", "localhost:6379"),
+//     }
+// }
+
+// func getEnv(key, fallback string) string {
+//     if value, ok := os.LookupEnv(key); ok {
+//         return value
+//     }
+//     return fallback
+// }

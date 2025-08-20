@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetHandler(rdb *redis.RedisClient) gin.HandlerFunc {
+func SetHandler(r *redis.RedisCache) gin.HandlerFunc {
     return func(c *gin.Context) {
         key := c.Query("key")
         value := c.Query("value")
@@ -23,7 +23,7 @@ func SetHandler(rdb *redis.RedisClient) gin.HandlerFunc {
         // TTL: bạn có thể hardcode, hoặc lấy từ query nếu muốn
         ttl := 10 * time.Second
 
-        err := rdb.Client().Set(c.Request.Context(), key, value, ttl).Err()
+        err := r.Set(c.Request.Context(), key, value, ttl)
         if err != nil {
             c.JSON(http.StatusInternalServerError, gin.H{
                 "error": "error save redis: " + err.Error(),

@@ -2,37 +2,30 @@ package routes
 
 import (
 	"Golang-Redis-Gin/internal/controllers"
-	handler "Golang-Redis-Gin/internal/handlers"
+	"Golang-Redis-Gin/internal/di"
 	"Golang-Redis-Gin/internal/redis"
-	"Golang-Redis-Gin/internal/repository"
-	"Golang-Redis-Gin/internal/service"
 
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"gorm.io/gorm"
 )
-func ApplicationV1Router(rdb *redis.RedisClient) *gin.Engine  {
-	router := gin.Default()
+func ApplicationV1Router(db *gorm.DB,r *gin.Engine, rdb  *redis.RedisCache) *gin.Engine  {
 
-	// Đăng ký route với handler
-	router.GET("/set", handler.SetHandler(rdb))
 	// add swagger
 	url := ginSwagger.URL("http://localhost:5001/swagger/doc.json")
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, url))
-	router.GET("/", controllers.Healthcheck)
-	userRepo := repository.NewUserRepository()
-    userSvc := service.NewUserService(userRepo)
-    userCtrl := controllers.NewUserController(userSvc)
-    userHandler := handler.NewUserHandler(userCtrl)
-	api := router.Group("/api/v1")
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, url))
+	r.GET("/", controllers.Healthcheck)
+	userHandler := di.InitUser(db, rdb)
+	api := r.Group("/api/v1")
 	{	
 		
 		member := api.Group("/member")
 		{
 			/////////////////  API
 			member.GET("/users/:id", userHandler.GetProfile)
-			member.GET("/create-table", controllers.MigrateTable)
-			member.POST("/member-register", controllers.MemberRegister)
+			// member.GET("/create-table", controllers.MigrateTable)
+			// member.POST("/member-register", controllers.MemberRegister)
 			// auth.POST("/silver-register", controllers.SilverRegister)
 			// auth.POST("/create-coupon", controllers.CreateCoupon)
 			// auth.POST("/member-login", controllers.MemberLogin)
@@ -58,5 +51,5 @@ func ApplicationV1Router(rdb *redis.RedisClient) *gin.Engine  {
 		// 	socialInfo.GET("/get-social-info", controllers.GetSocialInfo)
 		// }
 	}
-	return router
+	return r
 }

@@ -1,9 +1,6 @@
 package models
 
 import (
-	"Golang-Redis-Gin/config"
-	"Golang-Redis-Gin/internal/utils/constants"
-	"Golang-Redis-Gin/internal/utils/functions"
 	"time"
 )
 
@@ -22,63 +19,63 @@ type QueryCoupon struct {
 	Id            int       `json:"id" gorm:"id;primary_key;auto_increment;not_null"`
 }
 
-func CreateCoupon(body *CouponModel) (rs CouponModel, err error) {
-	functions.ShowLog("bodybodybodybodybodyerr", body)
-	body.CreatedAt = functions.CurrentTime()
-	body.UpdatedAt = functions.CurrentTime()
-	body.IsValid = true
-	body.CountRegistrations=0
-	err = config.DB.Debug().Create(&body).Error
+// func CreateCoupon(body *CouponModel) (rs CouponModel, err error) {
+// 	functions.ShowLog("bodybodybodybodybodyerr", body)
+// 	body.CreatedAt = functions.CurrentTime()
+// 	body.UpdatedAt = functions.CurrentTime()
+// 	body.IsValid = true
+// 	body.CountRegistrations=0
+// 	err = config.DB.Debug().Create(&body).Error
 
-	return rs, err
-}
-
-
-func FindCouponId(id int) (rs CouponModel) {
-
-	config.DB.Debug().
-		Table("coupon_models").
-		Where("id = ?", id).
-		Take(&rs)
-		functions.ShowLog("rs",rs)
-	return rs
-}
-
-func UpdateCountRegistrations(info CouponModel) (rs CouponModel ) {
-   config.DB.Debug().Table("coupon_models").Where("id = ?", info.Id).Updates(map[string]interface{}{
-	   "count_registrations": info.CountRegistrations - 1,
-   })
-   couponCurrent := CouponModel{}
-   config.DB.Debug().Table("coupon_models").Where("id = ?", info.Id).Take(&couponCurrent)
-   functions.ShowLog("=-=-=-=-=-=-cbepppppcheckkcouponCurrentcouponCurrentsk",couponCurrent)
-   if couponCurrent.CountRegistrations == 0{
-	config.DB.Debug().Table("coupon_models").Where("id = ?", info.Id).Updates(map[string]interface{}{
-		"is_valid": false,
-	})
-   }
-   return rs
-}
+// 	return rs, err
+// }
 
 
-func FindCouponList(params PageLimitQueryModel) (rs []CouponModel, totalCount int64) {
-	sortParams := "id asc"
-	keywordParams := ""
-	if params.Keyword != "" {
-		// keywordParams = ""
-		keywordParams = "title LIKE" + "'%" + params.Keyword 
+// func FindCouponId(id int) (rs CouponModel) {
 
-	}
-	if params.Sort == constants.SORT_PARAMS_DESC {
-		sortParams = "id desc"
-	}
-	config.DB.Table("coupon_models").
-		Debug().
-		Order(sortParams).
-		Where("is_valid=1").
-		Where(keywordParams).
-		Count(&totalCount).
-		Limit(params.Limit).
-		Offset((params.Page - 1) * params.Limit).
-		Find(&rs)
-	return rs, totalCount
-}
+// 	config.DB.Debug().
+// 		Table("coupon_models").
+// 		Where("id = ?", id).
+// 		Take(&rs)
+// 		functions.ShowLog("rs",rs)
+// 	return rs
+// }
+
+// func UpdateCountRegistrations(info CouponModel) (rs CouponModel ) {
+//    config.DB.Debug().Table("coupon_models").Where("id = ?", info.Id).Updates(map[string]interface{}{
+// 	   "count_registrations": info.CountRegistrations - 1,
+//    })
+//    couponCurrent := CouponModel{}
+//    config.DB.Debug().Table("coupon_models").Where("id = ?", info.Id).Take(&couponCurrent)
+//    functions.ShowLog("=-=-=-=-=-=-cbepppppcheckkcouponCurrentcouponCurrentsk",couponCurrent)
+//    if couponCurrent.CountRegistrations == 0{
+// 	config.DB.Debug().Table("coupon_models").Where("id = ?", info.Id).Updates(map[string]interface{}{
+// 		"is_valid": false,
+// 	})
+//    }
+//    return rs
+// }
+
+
+// func FindCouponList(params PageLimitQueryModel) (rs []CouponModel, totalCount int64) {
+// 	sortParams := "id asc"
+// 	keywordParams := ""
+// 	if params.Keyword != "" {
+// 		// keywordParams = ""
+// 		keywordParams = "title LIKE" + "'%" + params.Keyword 
+
+// 	}
+// 	if params.Sort == constants.SORT_PARAMS_DESC {
+// 		sortParams = "id desc"
+// 	}
+// 	config.DB.Table("coupon_models").
+// 		Debug().
+// 		Order(sortParams).
+// 		Where("is_valid=1").
+// 		Where(keywordParams).
+// 		Count(&totalCount).
+// 		Limit(params.Limit).
+// 		Offset((params.Page - 1) * params.Limit).
+// 		Find(&rs)
+// 	return rs, totalCount
+// }

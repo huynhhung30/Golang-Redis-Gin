@@ -3,11 +3,6 @@ package models
 import (
 	"context"
 	"time"
-
-	"Golang-Redis-Gin/config"
-	"Golang-Redis-Gin/internal/utils"
-	"Golang-Redis-Gin/internal/utils/constants"
-	"Golang-Redis-Gin/internal/utils/functions"
 )
 
 type UserModel struct {
@@ -48,117 +43,117 @@ type ProfileModel struct {
 	Token string `json:"token" gorm:"-"`
 }
 
-// Create User
-func CreateUser(userBody *UserModel) (user ProfileModel, err error) {
-	userBody.CreatedAt = functions.CurrentTime()
-	userBody.UpdatedAt = functions.CurrentTime()
-	userBody.EmailVerified = false
-	userBody.Status = constants.USER_STATUS_ACTIVE
-	if userBody.Avatar == "" {
-		userBody.Avatar = constants.USER_AVATAR_DEFAULT
-	}
-	err = config.DB.Debug().Create(&userBody).Error
-	user.UserModel = *userBody
-	user.Password = ""
-	user.Token = utils.GenerateTokenString(user.Id, constants.USER_TYPE_MEMBER)
-	return user, err
-}
+// // Create User
+// func CreateUser(userBody *UserModel) (user ProfileModel, err error) {
+// 	userBody.CreatedAt = functions.CurrentTime()
+// 	userBody.UpdatedAt = functions.CurrentTime()
+// 	userBody.EmailVerified = false
+// 	userBody.Status = constants.USER_STATUS_ACTIVE
+// 	if userBody.Avatar == "" {
+// 		userBody.Avatar = constants.USER_AVATAR_DEFAULT
+// 	}
+// 	err = config.DB.Debug().Create(&userBody).Error
+// 	user.UserModel = *userBody
+// 	user.Password = ""
+// 	user.Token = utils.GenerateTokenString(user.Id, constants.USER_TYPE_MEMBER)
+// 	return user, err
+// }
 
-// Find User Info By Email
-func FindUserProfileByEmail(email string, user_type string) (user *ProfileModel) {
-	config.DB.Where("email = ? and user_type = ? and login_method = ?", email, user_type, constants.LOGIN_METHOD_SYSTEM).First(&user)
-	return user
-}
+// // Find User Info By Email
+// func FindUserProfileByEmail(email string, user_type string) (user *ProfileModel) {
+// 	config.DB.Where("email = ? and user_type = ? and login_method = ?", email, user_type, constants.LOGIN_METHOD_SYSTEM).First(&user)
+// 	return user
+// }
 
-// Find User Profile List
-func CheckUserTypeIsAdmin(user_id int) bool {
-	var userInfo ProfileModel
-	config.DB.Where("id = ?", user_id).Take(&userInfo)
-	if userInfo.UserType != constants.USER_TYPE_ADMIN {
-		return true
-	} else {
-		return false
-	}
-}
+// // Find User Profile List
+// func CheckUserTypeIsAdmin(user_id int) bool {
+// 	var userInfo ProfileModel
+// 	config.DB.Where("id = ?", user_id).Take(&userInfo)
+// 	if userInfo.UserType != constants.USER_TYPE_ADMIN {
+// 		return true
+// 	} else {
+// 		return false
+// 	}
+// }
 
-// Find User Profile List
-func FindUserProfileList(params PageLimitQueryModel) (user []ProfileModel, totalCount int64) {
-	sortParams := "id asc"
-	keywordParams := ""
-	if params.Keyword != "" {
-		// keywordParams = ""
-		keywordParams = "first_name LIKE" + "'%" + params.Keyword + "%'" + "OR last_name LIKE" + "'%" + params.Keyword + "%'" + "OR email LIKE" + "'%" + params.Keyword + "%'"
+// // Find User Profile List
+// func FindUserProfileList(params PageLimitQueryModel) (user []ProfileModel, totalCount int64) {
+// 	sortParams := "id asc"
+// 	keywordParams := ""
+// 	if params.Keyword != "" {
+// 		// keywordParams = ""
+// 		keywordParams = "first_name LIKE" + "'%" + params.Keyword + "%'" + "OR last_name LIKE" + "'%" + params.Keyword + "%'" + "OR email LIKE" + "'%" + params.Keyword + "%'"
 
-	}
-	if params.Sort == constants.SORT_PARAMS_DESC {
-		sortParams = "id desc"
-	}
-	config.DB.Table("users").
-		Debug().
-		Order(sortParams).
-		Where(keywordParams).
-		Count(&totalCount).
-		Limit(params.Limit).
-		Offset((params.Page - 1) * params.Limit).
-		Find(&user)
-	for index := range user {
-		user[index].Password = ""
-	}
-	return user, totalCount
-}
+// 	}
+// 	if params.Sort == constants.SORT_PARAMS_DESC {
+// 		sortParams = "id desc"
+// 	}
+// 	config.DB.Table("users").
+// 		Debug().
+// 		Order(sortParams).
+// 		Where(keywordParams).
+// 		Count(&totalCount).
+// 		Limit(params.Limit).
+// 		Offset((params.Page - 1) * params.Limit).
+// 		Find(&user)
+// 	for index := range user {
+// 		user[index].Password = ""
+// 	}
+// 	return user, totalCount
+// }
 
-// Find User Profile By Id
-func FindUserProfileById(user_id string) (user ProfileModel) {
+// // Find User Profile By Id
+// func FindUserProfileById(user_id string) (user ProfileModel) {
 
-	config.DB.Debug().
-		Table("users").
-		Where("id = ?", user_id).
-		Take(&user)
-	user.Password = ""
-	return user
-}
-func SilverRegisterMember(user_id int) (user UserModel ) {
- 	config.DB.Debug().Table("users").Where("id = ?", user_id).Updates(map[string]interface{}{
-		"is_silver": true,
-	})
-	return user
-}
+// 	config.DB.Debug().
+// 		Table("users").
+// 		Where("id = ?", user_id).
+// 		Take(&user)
+// 	user.Password = ""
+// 	return user
+// }
+// func SilverRegisterMember(user_id int) (user UserModel ) {
+//  	config.DB.Debug().Table("users").Where("id = ?", user_id).Updates(map[string]interface{}{
+// 		"is_silver": true,
+// 	})
+// 	return user
+// }
 
-// Find User Info By Id
-func FindUserInfoById(user_id int) (user UserModel) {
-	config.DB.Where("id = ?", user_id).Take(&user)
-	user.Password = ""
-	return user
-}
+// // Find User Info By Id
+// func FindUserInfoById(user_id int) (user UserModel) {
+// 	config.DB.Where("id = ?", user_id).Take(&user)
+// 	user.Password = ""
+// 	return user
+// }
 
-// Find User Profile By Social Id
-func FindUserProfileBySocialId(login_method string, social_id string) (user *ProfileModel) {
-	config.DB.Model(&user).Where("login_method = ? AND social_id = ?", login_method, social_id).Scan(&user)
-	user.Password = ""
-	return user
-}
+// // Find User Profile By Social Id
+// func FindUserProfileBySocialId(login_method string, social_id string) (user *ProfileModel) {
+// 	config.DB.Model(&user).Where("login_method = ? AND social_id = ?", login_method, social_id).Scan(&user)
+// 	user.Password = ""
+// 	return user
+// }
 
-// Update User
-func UpdateUser(user UserModel) (UserModel, error) {
-	params := map[string]interface{}{
-		"updated_at": functions.CurrentTime(),
-	}
-	if user.FirstName != "" {
-		params["first_name"] = user.FirstName
-	}
-	if user.LastName != "" {
-		params["last_name"] = user.LastName
-	}
-	if user.Avatar != "" {
-		params["avatar"] = user.Avatar
-	}
-	if user.Address != "" {
-		params["address"] = user.Address
-	}
-	if user.PhoneNumber != "" {
-		params["phone_number"] = user.PhoneNumber
-	}
-	functions.ShowLog("params", params)
-	err := config.DB.Model(&user).Debug().Where("id = ?", user.Id).Updates(params).Take(&user).Error
-	return user, err
-}
+// // Update User
+// func UpdateUser(user UserModel) (UserModel, error) {
+// 	params := map[string]interface{}{
+// 		"updated_at": functions.CurrentTime(),
+// 	}
+// 	if user.FirstName != "" {
+// 		params["first_name"] = user.FirstName
+// 	}
+// 	if user.LastName != "" {
+// 		params["last_name"] = user.LastName
+// 	}
+// 	if user.Avatar != "" {
+// 		params["avatar"] = user.Avatar
+// 	}
+// 	if user.Address != "" {
+// 		params["address"] = user.Address
+// 	}
+// 	if user.PhoneNumber != "" {
+// 		params["phone_number"] = user.PhoneNumber
+// 	}
+// 	functions.ShowLog("params", params)
+// 	err := config.DB.Model(&user).Debug().Where("id = ?", user.Id).Updates(params).Take(&user).Error
+// 	return user, err
+// }

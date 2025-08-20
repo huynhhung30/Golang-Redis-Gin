@@ -3,33 +3,28 @@ package controllers
 import (
 	"Golang-Redis-Gin/internal/models"
 	"Golang-Redis-Gin/internal/service"
-	"Golang-Redis-Gin/internal/utils"
-	"Golang-Redis-Gin/internal/utils/constants"
 	"context"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 )
 
 
 
-type UserController interface {
-    GetUserByID(ctx context.Context, id string) (*models.UserModel, error)
+
+
+type UserController struct {
+    service service.UserService
 }
 
-type userController struct {
-    svc service.UserService
+func NewUserController(s service.UserService) *UserController {
+    return &UserController{service: s}
 }
 
-func NewUserController(s service.UserService) UserController {
-    return &userController{svc: s}
+func (uc *UserController) Create(ctx context.Context, user *models.UserModel) error {
+    return uc.service.CreateUser(ctx, user)
 }
 
-func (c *userController) GetUserByID(ctx context.Context, id string) (*models.UserModel, error) {
-    return c.svc.GetProfile(ctx, id)
+func (uc *UserController) GetByID(ctx context.Context, id string) (*models.UserModel, error) {
+    return uc.service.GetUser(ctx, id)
 }
-
 
 // Get profile user
 // func GetUserProfile(c *gin.Context) {
@@ -65,53 +60,53 @@ func (c *userController) GetUserByID(ctx context.Context, id string) (*models.Us
 // }
 
 // Update Profile
-func UpdateProfile(c *gin.Context) {
-	tokenInfo := utils.GetTokenInfo(c)
-	if tokenInfo.UserId == 0 {
-		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_TOKEN_NOT_FOUND, nil)
-		return
-	}
-	userUpdateBody := models.UserModel{}
-	if err := c.ShouldBindBodyWith(&userUpdateBody, binding.JSON); err != nil {
-		RES_ERROR_MSG(c, http.StatusNotFound, constants.MSG_INVALID_INPUT, err)
-		return
-	}
-	userInfo := models.FindUserInfoById(tokenInfo.UserId)
-	if userInfo.Id == 0 {
-		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_USER_NOT_FOUND, nil)
-		return
-	}
-	userUpdateBody.Id = tokenInfo.UserId
-	userInfo, err := models.UpdateUser(userUpdateBody)
-	if err != nil {
-		RES_ERROR_MSG(c, http.StatusNotFound, err.Error(), nil)
-		return
-	}
-	RES_SUCCESS_MSG(c, userInfo, "Update profile successfully")
-}
+// func UpdateProfile(c *gin.Context) {
+// 	tokenInfo := utils.GetTokenInfo(c)
+// 	if tokenInfo.UserId == 0 {
+// 		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_TOKEN_NOT_FOUND, nil)
+// 		return
+// 	}
+// 	userUpdateBody := models.UserModel{}
+// 	if err := c.ShouldBindBodyWith(&userUpdateBody, binding.JSON); err != nil {
+// 		RES_ERROR_MSG(c, http.StatusNotFound, constants.MSG_INVALID_INPUT, err)
+// 		return
+// 	}
+// 	userInfo := models.FindUserInfoById(tokenInfo.UserId)
+// 	if userInfo.Id == 0 {
+// 		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_USER_NOT_FOUND, nil)
+// 		return
+// 	}
+// 	userUpdateBody.Id = tokenInfo.UserId
+// 	userInfo, err := models.UpdateUser(userUpdateBody)
+// 	if err != nil {
+// 		RES_ERROR_MSG(c, http.StatusNotFound, err.Error(), nil)
+// 		return
+// 	}
+// 	RES_SUCCESS_MSG(c, userInfo, "Update profile successfully")
+// }
 
-// Update Fcm Token
-func UpdateFcmToken(c *gin.Context) {
-	tokenInfo := utils.GetTokenInfo(c)
-	if tokenInfo.UserId == 0 {
-		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_TOKEN_NOT_FOUND, nil)
-		return
-	}
-	fcmTokenBody := models.FcmTokenModel{}
-	if err := c.ShouldBindBodyWith(&fcmTokenBody, binding.JSON); err != nil {
-		RES_ERROR_MSG(c, http.StatusNotFound, constants.MSG_INVALID_INPUT, err)
-		return
-	}
-	fcmTokenInfo := models.FindFcmToken(fcmTokenBody.FcmToken)
-	if fcmTokenInfo.Id != 0 {
-		RES_SUCCESS_MSG(c, fcmTokenInfo, "Update profile successfully")
-		return
-	}
-	fcmTokenBody.Id = tokenInfo.UserId
-	fcmTokenInfoNew, err := models.UpdateFcmToken(fcmTokenBody)
-	if err != nil {
-		RES_ERROR_MSG(c, http.StatusNotFound, err.Error(), nil)
-		return
-	}
-	RES_SUCCESS_MSG(c, fcmTokenInfoNew, "Update fcm token successfully")
-}
+// // Update Fcm Token
+// func UpdateFcmToken(c *gin.Context) {
+// 	tokenInfo := utils.GetTokenInfo(c)
+// 	if tokenInfo.UserId == 0 {
+// 		RES_ERROR_MSG(c, http.StatusUnauthorized, constants.MSG_TOKEN_NOT_FOUND, nil)
+// 		return
+// 	}
+// 	fcmTokenBody := models.FcmTokenModel{}
+// 	if err := c.ShouldBindBodyWith(&fcmTokenBody, binding.JSON); err != nil {
+// 		RES_ERROR_MSG(c, http.StatusNotFound, constants.MSG_INVALID_INPUT, err)
+// 		return
+// 	}
+// 	fcmTokenInfo := models.FindFcmToken(fcmTokenBody.FcmToken)
+// 	if fcmTokenInfo.Id != 0 {
+// 		RES_SUCCESS_MSG(c, fcmTokenInfo, "Update profile successfully")
+// 		return
+// 	}
+// 	fcmTokenBody.Id = tokenInfo.UserId
+// 	fcmTokenInfoNew, err := models.UpdateFcmToken(fcmTokenBody)
+// 	if err != nil {
+// 		RES_ERROR_MSG(c, http.StatusNotFound, err.Error(), nil)
+// 		return
+// 	}
+// 	RES_SUCCESS_MSG(c, fcmTokenInfoNew, "Update fcm token successfully")
+// }

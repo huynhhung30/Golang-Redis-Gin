@@ -1,8 +1,6 @@
 package models
 
 import (
-	"Golang-Redis-Gin/config"
-	"Golang-Redis-Gin/internal/utils/functions"
 	"time"
 )
 
@@ -19,16 +17,16 @@ func (t *FcmTokenModel) TableName() string {
 	return "fcm_tokens"
 }
 
-// Update Fcm Token
-func UpdateFcmToken(fcmTokenBody FcmTokenModel) (FcmTokenModel, error) {
-	fcmTokenBody.CreatedAt = functions.CurrentTime()
-	fcmTokenBody.UpdatedAt = functions.CurrentTime()
-	err := config.DB.Create(&fcmTokenBody).Error
-	return fcmTokenBody, err
-}
+// // Update Fcm Token
+// func UpdateFcmToken(fcmTokenBody FcmTokenModel) (FcmTokenModel, error) {
+// 	fcmTokenBody.CreatedAt = functions.CurrentTime()
+// 	fcmTokenBody.UpdatedAt = functions.CurrentTime()
+// 	err := config.DB.Create(&fcmTokenBody).Error
+// 	return fcmTokenBody, err
+// }
 
-// Find SocialInfo Detail By Type And Id
-func FindFcmToken(fcm_token string) (fcmTokenInfo FcmTokenModel) {
-	config.DB.Model(FcmTokenModel{}).Where("fcm_token = ?", fcm_token).Take(&fcmTokenInfo)
-	return fcmTokenInfo
-}
+// // Find SocialInfo Detail By Type And Id
+// func FindFcmToken(fcm_token string) (fcmTokenInfo FcmTokenModel) {
+// 	config.DB.Model(FcmTokenModel{}).Where("fcm_token = ?", fcm_token).Take(&fcmTokenInfo)
+// 	return fcmTokenInfo
+// }

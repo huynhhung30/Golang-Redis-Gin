@@ -11,8 +11,8 @@ import (
 )
 
 func InitUser(db *gorm.DB,r *redis.RedisCache) *handler.UserHandler{
-    repo := repository.NewUserRepository(db,r)
-    svc  := service.NewUserService(repo)
+    repo := repository.NewUserRepository(db)
+    svc  := service.NewUserService(repo,r)
     ctrl := controllers.NewUserController(svc)
 	return handler.NewUserHandler(ctrl)
 }

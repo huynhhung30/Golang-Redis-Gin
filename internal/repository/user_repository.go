@@ -1,16 +1,9 @@
 package repository
 
 import (
-	"Golang-Redis-Gin/internal/cache"
 	"Golang-Redis-Gin/internal/models"
-	"Golang-Redis-Gin/internal/redis"
 	"context"
-	"encoding/json"
-	"fmt"
-	"strconv"
-	"time"
 
-	redisLib "github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
@@ -21,47 +14,24 @@ type UserRepository interface {
 }
 
 type userRepository struct {
-    gorm  *gorm.DB
-    cache cache.Cache
+    db *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB,r *redis.RedisCache) UserRepository {
-    return &userRepository{
-        gorm: db,
-        cache: r,
-    }
+func NewUserRepository(db *gorm.DB) UserRepository {
+    return &userRepository{db: db}
 }
 
-func (ur *userRepository) Save(ctx context.Context, user *models.UserModel) error {
-    data, err := json.Marshal(user)
-    if err != nil {
-        return err
-    }
-    return ur.cache.Set(ctx, "user:"+strconv.Itoa(user.Id), data, 0)
+// Save user vào DB
+func (r *userRepository) Save(ctx context.Context, user *models.UserModel) error {
+    return r.db.WithContext(ctx).Create(user).Error
 }
 
-func (ur *userRepository) FindByID(ctx context.Context, id string) (*models.UserModel, error) {
-    cacheKey := fmt.Sprintf("user:%s", id) // id là string nên dùng %s
-
-    // 1. Kiểm tra trong cache
-    cached, err := ur.cache.Get(ctx, cacheKey)
-    if err == nil {
-        var user models.UserModel
-        if jsonErr := json.Unmarshal([]byte(cached), &user); jsonErr == nil {
-            fmt.Println("✅ Lấy từ cache Redis")
-            return &user, nil
-        }
-    } else if err != redisLib.Nil {
-        fmt.Println("⚠️ Redis error:", err)
-    }
-    
-    // 2. Query from DB
+// Query theo ID từ DB
+func (r *userRepository) FindByID(ctx context.Context, id string) (*models.UserModel, error) {
     var user models.UserModel
-	if err := ur.gorm.First(&user, id).Error; err != nil {
-		return nil, err
-	}
-    // Lưu vào cache
-	data, _ := json.Marshal(user)
-	_ = ur.cache.Set(ctx, cacheKey, data, 5*time.Minute)
+    if err := r.db.WithContext(ctx).First(&user, "id = ?", id).Error; err != nil {
+        return nil, err
+    }
     return &user, nil
 }
+

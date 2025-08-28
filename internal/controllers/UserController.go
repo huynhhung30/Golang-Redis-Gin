@@ -4,6 +4,7 @@ import (
 	"Golang-Redis-Gin/internal/models"
 	"Golang-Redis-Gin/internal/service"
 	"context"
+	"errors"
 )
 
 
@@ -23,7 +24,16 @@ func (uc *UserController) Create(ctx context.Context, user *models.UserModel) er
 }
 
 func (uc *UserController) GetByID(ctx context.Context, id string) (*models.UserModel, error) {
-    return uc.service.GetUser(ctx, id)
+	if id == "" {
+		return nil, errors.New("id is required")
+	}
+
+	user, err := uc.service.GetUser(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 // Get profile user

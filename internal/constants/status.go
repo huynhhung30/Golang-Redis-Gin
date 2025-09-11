@@ -18,6 +18,7 @@ const MSG_PASSWORD_INCORRECT = "Password incorrect"
 const MSG_TOKEN_NOT_FOUND = "Token not found"
 const MSG_USER_NOT_FOUND = "User not found"
 const MSG_USER_NOT_ROLE = "User not admin"
+const SUCCESS = "Ok, Success"
 
 // USER TYPE
 const USER_TYPE_ADMIN = "admin"

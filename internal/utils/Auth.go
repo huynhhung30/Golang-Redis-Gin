@@ -10,7 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
-	hashers "github.com/meehow/go-django-hashers"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type TokenModel struct {
@@ -19,26 +19,22 @@ type TokenModel struct {
 	Exp      time.Time
 }
 
-// Compare password with hash
-func CheckPasswordHash(password string, hash string) bool {
-	ok, err := hashers.CheckPassword(password, hash)
-	result := true
+
+// HashPassword băm mật khẩu với bcrypt
+func HashPassword(password string) (string, error) {
+	// bcrypt.DefaultCost = 10 (đủ an toàn, có thể tăng lên 12-14 nếu cần)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		result = false
-	} else if ok != true {
-		result = false
-	} else {
-		result = true
+		return "", err
 	}
-	return result
+	return string(hashed), nil
 }
 
-// Hash password
-func HashPassword(password string) string {
-	passwordHash, _ := hashers.MakePassword(password)
-	return passwordHash
+// CheckPassword so sánh password người dùng nhập với password đã hash
+func CheckPassword(password, hashed string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashed), []byte(password))
+	return err == nil
 }
-
 // Extract token
 func ExtractToken(c *gin.Context) string {
 	if len(c.Request.Header["Authorization"]) > 0 {

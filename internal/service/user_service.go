@@ -4,16 +4,16 @@ import (
 	"Golang-Redis-Gin/internal/cache"
 	"Golang-Redis-Gin/internal/models"
 	"Golang-Redis-Gin/internal/repository"
+	"Golang-Redis-Gin/internal/utils"
 	"Golang-Redis-Gin/internal/utils/functions"
 	"context"
-	"strconv"
 	"time"
 )
 
 
 
 type UserService interface {
-    CreateUser(ctx context.Context, user *models.UserModel) error
+    CreateUser(ctx context.Context, user *models.UserModel) (*models.UserModel, error)
     GetUser(ctx context.Context, id string) (*models.UserModel, error)
 }
 
@@ -30,12 +30,37 @@ func NewUserService(repo repository.UserRepository, cache cache.Cache) UserServi
 }
 
 
-func (s *userService) CreateUser(ctx context.Context, user *models.UserModel) error {
-    // Business logic (ví dụ: validate)
-    if strconv.Itoa(user.Id) == "" || user.FirstName == ""|| user.LastName == "" {
-        return nil
+func (s *userService) CreateUser(ctx context.Context, user *models.UserModel) (*models.UserModel, error) {
+    // Validate input
+    if user.Email == "" {
+        return nil, utils.NewBadRequest("email is required")
     }
-    return s.repo.Save(ctx, user)
+    if user.Password == "" {
+        return nil, utils.NewBadRequest("password is required")
+    }
+    if len(user.Password) < 6 {
+        return nil, utils.NewBadRequest("password must be at least 6 characters")
+    }
+    
+    // Check email conflict
+    existing, _ := s.repo.FindByEmail(ctx, user.Email)
+    if existing != nil {
+        return nil, utils.NewConflict("email already exists")
+    }
+
+    // Hash password
+    hashedPassword, err := utils.HashPassword(user.Password)
+    if err != nil {
+        return nil, utils.NewInternal("cannot hash password")
+    }
+    user.Password = hashedPassword
+
+    // Save user
+    if err := s.repo.Save(ctx, user); err != nil {
+        return nil, utils.NewInternal("failed to save user")
+    }
+
+    return user, nil
 }
 
 func (s *userService) GetUser(ctx context.Context, id string) (*models.UserModel, error) {

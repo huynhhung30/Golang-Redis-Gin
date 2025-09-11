@@ -19,7 +19,7 @@ func NewUserController(s service.UserService) *UserController {
     return &UserController{service: s}
 }
 
-func (uc *UserController) Create(ctx context.Context, user *models.UserModel) error {
+func (uc *UserController) Create(ctx context.Context, user *models.UserModel) (*models.UserModel, error) {
     return uc.service.CreateUser(ctx, user)
 }
 

@@ -25,7 +25,7 @@ func ApplicationV1Router(db *gorm.DB,r *gin.Engine, rdb  *redis.RedisCache) *gin
 			/////////////////  API
 			member.GET("/users/:id", userHandler.GetProfile)
 			// member.GET("/create-table", controllers.MigrateTable)
-			// member.POST("/member-register", controllers.MemberRegister)
+			member.POST("/create-user", userHandler.CreateUser)
 			// auth.POST("/silver-register", controllers.SilverRegister)
 			// auth.POST("/create-coupon", controllers.CreateCoupon)
 			// auth.POST("/member-login", controllers.MemberLogin)

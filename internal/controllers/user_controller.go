@@ -22,6 +22,13 @@ func NewUserController(s service.UserService) *UserController {
 func (uc *UserController) Create(ctx context.Context, user *models.UserModel) (*models.UserModel, error) {
     return uc.service.CreateUser(ctx, user)
 }
+func (uc *UserController) LogInUser(ctx context.Context, user *models.UserModel) (*models.UserModel, error) {
+    return uc.service.LogInUser(ctx, user)
+}
+func (uc *UserController) GetUserByEmail(ctx context.Context, email string) (*models.UserModel, error) {
+    return uc.service.GetUserByEmail(ctx, email)
+}
+
 
 func (uc *UserController) GetByID(ctx context.Context, id string) (*models.UserModel, error) {
 	if id == "" {

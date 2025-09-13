@@ -1,20 +1,49 @@
-# TRINITY APP
+# Golang Source Code
+
+- I am learning Golang from scratch, and I am building this project following Clean Architecture
+  /Golang-Redis-Gin
+  │── cmd/ # entrypoint
+  │ └── api/
+  │ └── main.go
+  │
+  │── internal/
+  │ ├── domain/ # entities + interfaces (User, ...)
+  │ │ └── user.go
+  │ │
+  │ ├── repository/ # repository interface + implementation
+  │ │ ├── user_repository.go
+  │ │ └── mysql/
+  │ │ └── user_repo_mysql.go
+  │ │
+  │ ├── service/ # use case (business logic)
+  │ │ └── user_service.go
+  │ │
+  │ ├── controller/ # orchestrator (optional)
+  │ │ └── user_controller.go
+  │ │
+  │ ├── handler/ # HTTP handler (Gin)
+  │ │ └── user_handler.go
+  │ │
+  │ ├── cache/ # Redis adapter
+  │ │ └── redis.go
+  │ │
+  │ ├── utils/ # helper (error, password hash, response)
+  │ │ ├── error.go
+  │ │ ├── password.go
+  │ │ ├── response.go
+  │ │ └── log.go
+  │ │
+  │ └── config/ # load ENV/config
+  │ └── config.go
+  │
+  │── pkg/ # shared libs (logger, middleware, etc.)
+  │ ├── logger/
+  │ └── middleware/
+  │
+  │── go.mod
+  │── go.sum
+  │── README.md
 
 ## GitHub repository containing:
 
-- Source code for implemented component(s):https://github.com/huynhhung30/Golang-Redis-Gin
-- API Documentation: http://localhost:5001/swagger/index.html
-- Setup instructions:
-  - step 1: git clone https://github.com/huynhhung30/Golang-Redis-Gin.git
-  - step 2: make up (build images and create containers on docker or use " make run " to run local )
-  - step 3: run api http://localhost:5001/api/v1/trinity/create-table to insert table for test
-
 ## documenting
-
-    * Technical decisions:
-        + Go with Gin framework (vscode) and Mysql (Mysql workbench) for Database
-        + Use Docker to create an environment for the database as well as run source code in a local environment.
-
-    * Local setup guide:
-        + make up (to set up and docker and test)
-        + make run (to run local)

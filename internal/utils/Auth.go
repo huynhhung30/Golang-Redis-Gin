@@ -98,3 +98,24 @@ func GenerateTokenString(user_id int, user_type string) string {
 	}
 	return token
 }
+
+
+func GenerateAccessToken(userId int, email string, role string) (string, error) {
+	claims := jwt.MapClaims{
+		"user_id": userId,
+		"email":   email,
+		"role":    role,
+		"exp":     time.Now().Add(15 * time.Minute).Unix(), // expires in 15 minutes
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(os.Getenv("SECRET")))
+}
+
+func GenerateRefreshToken(userId int) (string, error) {
+	claims := jwt.MapClaims{
+		"user_id": userId,
+		"exp":     time.Now().Add(7 * 24 * time.Hour).Unix(), // expires in 7 days
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(os.Getenv("SECRET")))
+}

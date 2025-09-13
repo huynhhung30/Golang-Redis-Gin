@@ -5,6 +5,7 @@ import (
 	"Golang-Redis-Gin/internal/controllers"
 	"Golang-Redis-Gin/internal/models"
 	"Golang-Redis-Gin/internal/utils"
+	"Golang-Redis-Gin/internal/utils/functions"
 
 	"net/http"
 
@@ -20,6 +21,39 @@ func NewUserHandler(ctrl *controllers.UserController) *UserHandler {
     return &UserHandler{ctrl: ctrl}
 }
 
+func (h *UserHandler) LogInUser(c *gin.Context) {
+	req := &models.UserModel{}
+	functions.ShowLog("&models.UserModel{}", req)
+
+   if err := c.ShouldBindJSON(&req); err != nil {
+    utils.Error(c, http.StatusBadRequest, "Yêu cầu không hợp lệ")
+    return
+}
+functions.ShowLog("req", req)
+    user, err := h.ctrl.GetUserByEmail(c.Request.Context(), req.Email)
+    	if err != nil || !utils.CheckPassword(req.Password, user.Password) {
+		utils.Error(c, http.StatusUnauthorized, "Invalid email or password")
+		return
+	}
+ 
+	accessToken, err := utils.GenerateAccessToken(user.Id, user.Email, user.Role)
+	if err != nil {
+		utils.Error(c, http.StatusInternalServerError, "Failed to generate access token")
+		return
+	}
+
+	refreshToken, err := utils.GenerateRefreshToken(user.Id)
+	if err != nil {
+		utils.Error(c, http.StatusInternalServerError, "Failed to generate refresh token")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
+	})
+    
+}
 func (h *UserHandler) CreateUser(c *gin.Context) {
     var req models.UserModel
     if err := c.ShouldBindJSON(&req); err != nil {
